@@ -22,7 +22,7 @@ class Order(models.Model):
         ('Yes', 'Yes'),
         ('No', 'No'),
     ]
-    cakeorder = models.ForeignKey(Cake , models.SET_NULL,related_name='order',null=True)
+    cakeId = models.ForeignKey(Cake , models.SET_NULL,related_name='order',null=True)
     text=models.CharField(max_length=255,default='Happy Birthday')
     Shape=models.CharField(choices=CHOICES1,max_length=255,default='Round')
     eggless=models.CharField(choices=CHOICES2,max_length=3,default='No')
