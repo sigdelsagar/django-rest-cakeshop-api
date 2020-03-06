@@ -14,7 +14,7 @@ class CakeSerializer(serializers.ModelSerializer):
 
 # class OrderSerializer(serializers.ModelSerializer):
 #     class Meta:
-#         model = Order
+#         model = Order 
 #         fields ='__all__'
 #         extra_kwargs = {'user_ins': {'read_only': True},
 #                         'timetodeliver':{'label': 'H:M'},

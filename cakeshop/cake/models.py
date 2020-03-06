@@ -11,7 +11,9 @@ class Cake(models.Model):
     flavour = models.CharField(max_length=255,null=True, blank=True)
     weight =  models.CharField(max_length=255,default='1 pound')
     cost = models.PositiveIntegerField(blank=True, null=True)
-    
+
+    def __str__(self):
+        return self.cake    
 
 class Order(models.Model):
     CHOICES1 = [
@@ -34,3 +36,6 @@ class Order(models.Model):
     quantity=models.PositiveIntegerField(default=1)
     user_ins = models.ForeignKey(settings.AUTH_USER_MODEL, default=1,
                                  null=True, on_delete=models.SET_NULL)
+    
+    def __str__(self):
+        return self.text
