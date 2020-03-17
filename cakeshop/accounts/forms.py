@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-
 User = get_user_model()
 
 
@@ -10,7 +9,8 @@ class UserAdminCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    password2 = forms.CharField(
+        label='Password confirmation', widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -49,3 +49,40 @@ class UserAdminChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
+
+
+class LoginForm(forms.Form):
+    email = forms.CharField(label='', widget=forms.EmailInput(
+        attrs={'placeholder': 'Email'}))
+    password = forms.CharField(label='', widget=forms.PasswordInput(
+        attrs={'placeholder': 'Password'}))
+
+
+class SignupForm(forms.ModelForm):
+    email = forms.CharField(label='', widget=forms.EmailInput(
+        attrs={'placeholder': 'Email'}))
+    password = forms.CharField(label='', widget=forms.PasswordInput(
+        attrs={'placeholder': 'Password'}))
+    confirm_password = forms.CharField(label='', widget=forms.PasswordInput(
+        attrs={'placeholder': 'Confirm Password'}))
+
+    class Meta:
+        model = User
+        fields = ['email', ]
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("email already exists")
+        return email
+
+    def clean_confirm_password(self):
+        pword = self.cleaned_data["password"]
+        c_pword = self.cleaned_data["confirm_password"]
+        if pword != c_pword:
+            raise forms.ValidationError("Password didnot match")
+        return c_pword
+
+
+class SendMailForm(forms.Form):
+    email = forms.EmailField()

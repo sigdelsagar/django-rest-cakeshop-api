@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cake Shop</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+            background: rgb(54, 217, 182);
+            background: linear-gradient(90deg, rgba(54, 217, 182, 1) 0%, rgba(32, 152, 126, 1) 43%, rgba(0, 212, 255, 1) 100%);
+        }
+
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        span,
+        strike {
+            font-family: 'Montserrat', sans-serif;
+
+        }
+
+
+        #task-container {
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+            background-color: #fff;
+
+            margin-top: 100px;
+            margin-bottom: 100px;
+
+            justify-content: space-around;
+            align-items: flex-start;
+
+        }
+
+        #form-wrapper {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0rem;
+            border-bottom: 1px solid #e9e9e9;
+            background-color: #fff;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+            padding: 40px;
+        }
+
+        #submit {
+            background-color: #36d9b6;
+            border-radius: 0;
+            border: 0;
+            color: #fff;
+        }
+
+        #submit2 {
+            background-color: #36d9b6;
+            border-radius: 0;
+            border: 0;
+            color: #fff;
+        }
+
+        .flex-wrapper {
+            display: flex;
+        }
+
+        .task-wrapper {
+            margin: 5px;
+            padding: 5px;
+            padding: 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #e9e9e9;
+            color: #686868;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container" id="maincontainer">
+        <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand" href="" id="menu">Menu</a>
+        </nav>
+        <div id="task-container">
+            <!-- <div id="form-wrapper"> -->
+            <!-- <form id="form">
+                    <div class="flex-wrapper">
+                        <div style="flex: 6">
+                            <input id="title" class="form-control" type="text" name="title" placeholder="Add task">
+                        </div>
+                        <div style="flex: 1">
+                            <input id="submit" class="btn" type="submit">
+                        </div>
+                    </div>
+                </form> -->
+            <!-- </div> -->
+
+
+        </div>
+        <div id="list-wrapper">
+
+        </div>
+        <div class="row" id="row">
+            <div class="col" id="col1">
+
+            </div>
+            <div class="col" id="col2">
+
+            </div>
+            <div class="col" id="col3">
+
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var menuBtn = document.getElementById('menu');
+            menuBtn.addEventListener('click', function () {
+                cakelist();
+            })
+
+
+
+
+            cakelist();
+            var category;
+            function cakelist() {
+                var cake1 = document.getElementById('col1')
+                var cake2 = document.getElementById('col2')
+                var cake3 = document.getElementById('col3')
+                var url = 'http://127.0.0.1:8000/api/cake/'
+
+                fetch(url)
+                    .then((resp) => resp.json())
+                    .then(function (data) {
+                        console.log('Data:', data)
+                        let a = 1;
+                        for (let i in data) {
+                            var item = `
+                        
+                            <div class="card" style="width: 15rem;">
+                                <img src="${data[i].image}" class="card-img-top" height="200" width="150">
+                                <div class="card-body">
+                                <h5 class="card-title">${data[i].cake}</h5>
+                                <input id="submit" class="btn" type="submit" value='Details'>
+                                </div>
+                            </div>
+                        
+                        <br/>
+                        `
+                            if (a == 1) {
+                                cake1.innerHTML += item;
+                                a = 2;
+                            }
+                            else if (a == 2) {
+                                cake2.innerHTML += item;
+                                a = 3;
+                            }
+                            else if (a == 3) {
+                                cake3.innerHTML += item;
+                                a = 1;
+                            }
+
+                        }
+                        for (let i in data) {
+                            var editBtn = document.getElementsByClassName('btn')[i]
+                            editBtn.addEventListener('click', function () {
+                                editItem(data[i])
+                            })
+
+                        }
+                    })
+            }
+
+            function editItem(data) {
+                console.log("originaldata", data);
+                var flavor = `<select id="flavor">`;
+                var today = new Date();
+                var yyyy = today.getFullYear();
+                console.log(today.getMonth(), today.getDate());
+                /*
+                for (let i in data.flavor_type) {
+                    //console.log(data.flavor_type[i]);
+                    flavor[i] = `<input id="flavor" class="flavor" type="checkbox">
+                    <label for="${data.flavor_type[i]}">${data.flavor_type[i]}</label>`;
+                }*/
+                for (let i in data.flavor_type) {
+                    //console.log(data.flavor_type[i]);
+                    flavor += `<option value="${data.flavor_id[i]}">${data.flavor_type[i]}</option>`;
+                }
+                flavor += `</select>`;
+                document.getElementById('col1').innerHTML = "";
+                document.getElementById('col2').innerHTML = "";
+                document.getElementById('col3').innerHTML = "";
+                var cakedetail = document.getElementById('maincontainer');
+                category = data.categoryId;
+
+                var item = `
+                        <div class="row">
+                            <div class="col">
+                                    <div class="card" style="width: 15rem;">
+                                            <img src="${data.image}" class="card-img-top"height="200" width="150">
+                                            <div class="card-body">
+                                            <h5 class="card-title">${data.cake}</h5>
+                                            </div>
+                                    </div>
+                            </div>
+                            <div class="col">
+                                    <div class="card">
+                                            <div class="card-body">
+                                            <h5 class="card-title">${data.cake} (Make Your own customization)</h5>
+                                            <h6>Filling: ${data.filling}</h6>
+                                            <h6>Frosting: ${data.frosting}</h6>
+                                            <h6>Flavor Type: ${data.flavor_type}</h6>
+                                            <h6>Category : ${data.category}</h6>
+                                            <h6>Base Cost: ${data.base_cost}</h6>
+                                            
+                                            <label>Do you want eggless?</label><br/>
+                                            <input id="eggless-yes" class="yes" type="checkbox" price='0' bool='0'>
+                                            <label for="eggless-yes">Yes[+50]</label>
+                                            <input id="eggless-no" class="no" type="checkbox">
+                                            <label for="eggless-no">No</label></br>
+                                            <label>Do you want accessories?</label><br/>
+                                            <input id="accessories-yes" class="yes" type="checkbox" price='0' bool='0'>
+                                            <label for="accessories">Yes[+50]</label>
+                                            <input id="accessories-no" class="no" type="checkbox">
+                                            <label for="accessories-no">No</label><br/>
+                                            <label>Do you want sugerless?</label><br/>
+                                            <input id="sugerless-yes" class="yes" type="checkbox" price='0' bool='0'>
+                                            <label for="sugerless-yes">Yes[+50]</label>
+                                            <input id="sugerless-no" class="no" type="checkbox">
+                                            <label for="sugerless-no">No</label><br/>
+                                            <label>Shape of cake</label><br/>
+                                            <input id="Round" class="checkbox" type="checkbox" value=''>
+                                            <label for="Round">Round</label>
+                                            <input id="Rectangle" class="checkbox" type="checkbox" value=''>
+                                            <label for="Rectangle">Rectangle</label><br/>
+                                            <label>What to write on cake?</label><br/>
+                                            <input id="decoration" class="input" type="input" placeholder="Happy Birthday"><br/>
+                                            <label>No of pounds</label><br/>
+                                            <input type="number" id="pounds" name="pounds" step="0.1" min="1" placeholder="1" value="1"></br>
+                                            <label>No of qty</label><br/>
+                                            <input type="number" id="qty" name="pounds" min="1" placeholder="1" value="1"><br/>
+                                            <label>Available Flavor</label><br/>
+                                            `
+                    + flavor +
+                    `<br/>                   
+                                            <label id="pickupdate">PickupDate :</label>
+                                            <input type="date" id="date" name="trip-start"
+                                            value="${today.getFullYear()}-${today.getMinutes() + 1}-${today.getDate()}" required> <br/>  
+                                            <label id="pickupdate">Picktime Available(9:00 am to 10:00 pm):</label>
+                                            <input type="time" id="time" name="time" required/><br/>
+                                            <label>Mobile no:</label>
+                                            <input type="input" id="contact" required/><br/>
+                                            <input id="submit" type="submit" onclick="OrderItem(${data.id},${data.base_cost})"class="btn" value="Place Order"/>
+                                                                </div>
+                                                                </div>
+                                                    </div>
+                                                </div>
+                                           
+                                            
+                    <br/>`
+                cakedetail.innerHTML += item;
+                let yesBtn0 = document.getElementById('eggless-yes');
+                let noBtn0 = document.getElementById('eggless-no');
+                let yesBtn1 = document.getElementById('accessories-yes');
+                let noBtn1 = document.getElementById('accessories-no');
+                let yesBtn2 = document.getElementById('sugerless-yes');
+                let noBtn2 = document.getElementById('sugerless-no');
+                let round = document.getElementById('Round');
+                let rectangle = document.getElementById('Rectangle');
+                let total = 0;
+                let shape = '';
+                yesBtn0.onclick = function () {
+                    if (this.checked == true) {
+                        console.log(this.value)
+                        this.checked = true;
+
+                        this.setAttribute('Price', '50');
+                        this.setAttribute('bool', '1');
+                        noBtn0.checked = false;
+                    }
+                    else {
+                        console.log("0")
+                        this.checked = false;
+                        this.setAttribute('Price', '0');
+                        this.setAttribute('bool', '0');
+                    }
+                }
+                noBtn0.onclick = function () {
+                    if (this.checked == true) {
+                        console.log("1")
+                        this.checked = true;
+
+                        yesBtn0.checked = false;
+                        yesBtn0.setAttribute('Price', '0');
+                        yesBtn0.setAttribute('bool', '0');
+                    }
+                    else {
+                        console.log("0")
+                        this.checked = false;
+                    }
+                }
+
+                yesBtn1.onclick = function () {
+                    if (this.checked == true) {
+                        console.log(this.value)
+                        this.checked = true;
+                        this.setAttribute('Price', '50');
+                        this.setAttribute('bool', '1');
+                        noBtn1.checked = false;
+                    }
+                    else {
+                        console.log("0")
+                        this.checked = false;
+                        this.setAttribute('Price', '0');
+                        this.setAttribute('bool', '0');
+                    }
+                }
+                noBtn1.onclick = function () {
+                    if (this.checked == true) {
+                        console.log("1")
+                        this.checked = true;
+
+                        yesBtn1.checked = false;
+                        yesBtn1.setAttribute('Price', '0');
+                        yesBtn1.setAttribute('bool', '0');
+                    }
+                    else {
+                        console.log("0")
+                        this.checked = false;
+                    }
+                }
+                yesBtn2.onclick = function () {
+                    if (this.checked == true) {
+                        console.log(this.value)
+                        this.checked = true;
+                        this.setAttribute('Price', '50');
+                        this.setAttribute('bool', '1');
+                        noBtn2.checked = false;
+                    }
+                    else {
+                        console.log("0")
+                        this.checked = false;
+                        this.setAttribute('Price', '0')
+                        this.setAttribute('bool', '0');
+                    }
+                }
+                noBtn2.onclick = function () {
+                    if (this.checked == true) {
+                        console.log("1")
+                        this.checked = true;
+
+                        yesBtn2.checked = false;
+                        yesBtn2.setAttribute('Price', '0')
+                        yesBtn2.setAttribute('bool', '0');
+                    }
+                    else {
+                        console.log("0")
+                        this.checked = false;
+                    }
+                }
+                round.onclick = function () {
+                    if (this.checked == true) {
+
+                        this.checked = true;
+                        this.setAttribute('value', 'Round')
+                        rectangle.checked = false;
+                    }
+                    else {
+                        console.log("0")
+                        this.checked = false;
+                        this.setAttribute('value', '')
+                    }
+                }
+                rectangle.onclick = function () {
+                    if (this.checked == true) {
+                        console.log("1")
+                        this.checked = true;
+                        this.setAttribute('value', 'Rectangle');
+                        round.checked = false;
+                        round.setAttribute('value', '')
+
+                    }
+                    else {
+                        console.log("0")
+                        this.checked = false;
+                        this.setAttribute('value', '')
+                    }
+                }
+
+            }
+            function OrderItem(cakeid, cost) {
+
+                document.getElementById('col1').innerHTML = "";
+                document.getElementById('col2').innerHTML = "";
+                document.getElementById('col3').innerHTML = "";
+                let decoration = document.getElementById('decoration');
+                console.log(decoration.value);
+                let pounds = document.getElementById('pounds');
+                console.log(pounds.value);
+
+                let pickupdate = document.getElementById('date');
+                if (pickupdate.value == "") {
+                    alert('Insert pickup date')
+                    return false;
+                }
+                let Time = document.getElementById('time');
+                if (Time.value == "") {
+                    alert('Insert pickup time')
+                    return false;
+                }
+
+                var phoneno = /^\d{10}$/;
+                var contact = document.getElementById('contact')
+                if (contact.value.match(phoneno) == false) {
+                    alert("Mobile number is of 10 digits");
+                    return false;
+                }
+
+                let qty = document.getElementById('qty');
+                console.log(qty.value);
+                let yesBtn0 = document.getElementById('eggless-yes');
+                console.log(yesBtn0.getAttribute('price'));
+                let noBtn0 = document.getElementById('eggless-no');
+
+                let yesBtn1 = document.getElementById('accessories-yes');
+                console.log(yesBtn1.getAttribute('price'));
+                let noBtn1 = document.getElementById('accessories-no');
+                let yesBtn2 = document.getElementById('sugerless-yes');
+                console.log(yesBtn2.getAttribute('price'));
+                let noBtn2 = document.getElementById('sugerless-no');
+                let shape = '';
+                let round = document.getElementById('Round');
+
+
+                let rectangle = document.getElementById('Rectangle');
+                if (round.getAttribute('value') == null) {
+                    if (rectangle.getAttribute('value') == null) {
+                        shape = "Round";
+                    }
+                    else {
+                        shape = "Rectangle";
+                    }
+                }
+                else {
+                    shape = "Rectangle";
+                }
+                if (decoration.value == null) {
+                    console.log("YesNull");
+                }
+                let flavor_type = document.getElementById('flavor');
+                e = (parseInt(yesBtn0.getAttribute('bool')))
+                a = (parseInt(yesBtn1.getAttribute('bool')))
+                s = (parseInt(yesBtn2.getAttribute('bool')))
+                p = (parseInt(pounds.value))
+                q = (parseInt(qty.value))
+                finalOrder = {
+                    "cakeId": cakeid,
+                    "eggless": e,
+                    "accessories": a,
+                    "sugerless": s,
+                    "shape": shape,
+                    "decoration": decoration.value,
+                    "no_of_pounds": p,
+                    "quantity": q,
+                    "pickupdate": pickupdate.value,
+                    "timetodeliver": Time.value,
+                    "total_cost": ((cost * p) + (e + a + s)) * q,
+                    "flavour_type": "",
+                    "category": category,
+                    "contactno": contact.value,
+                    "flavor_type": flavor_type.value,
+
+                };
+                console.log("orderfinal", finalOrder);
+
+                function getCookie(name) {
+                    var cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        var cookies = document.cookie.split(';');
+                        for (var i = 0; i < cookies.length; i++) {
+                            var cookie = cookies[i].trim();
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+                var csrftoken = getCookie('csrftoken');
+
+                console.log(finalOrder);
+                var url = 'http://127.0.0.1:8000/api/order/'
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify(finalOrder)
+                }
+                ).then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    console.log("Data is ok", data);
+                }).catch(function (ex) {
+                    console.log("parsing failed", ex);
+                });
+
+
+
+
+            }
+
+
+        </script>
+
+</body>
+
+</html>

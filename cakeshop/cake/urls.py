@@ -27,7 +27,10 @@ router.register(r'user', UserViewSet)
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/', include(router.urls), name='rest-api'),
-    path('', schema_view.with_ui('swagger')),
+    path('swagger/', schema_view.with_ui('swagger')),
+    path('bill/',views.pdf_generation,name='pdf-gen'),
+    path('celery/',views.celeryCheck,name='celery-check')
+    
     # path('order/', views.PlaceOrder.as_view()),
     
 ]

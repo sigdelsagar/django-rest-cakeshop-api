@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link href="{% static 'css/bill.css' %}" media="print" rel="stylesheet" />
+
+  <title>Invoice</title>
+  <meta name="description" content="Invoice demo sample" />
+  <meta name="author" content="Kozea" />
+</head>
+
+<body>
+  <h1 style="text-align:center">Invoice</h1>
+  <aside>
+    <address id="from">
+      Kathmandu Cake Shop
+      Baneshwor,Kathmandu
+    </address>
+
+    <address id="to">
+      Bhusan Dahal
+    </address>
+  </aside>
+
+  <dl id="informations">
+    <dt>Invoice number</dt>
+    <dd>12345</dd>
+    <dt>Date</dt>
+    <dd>March 31, 2018</dd>
+  </dl>
+
+  <table>
+    <thead>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Subtotal</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Website design</td>
+        <td>€34.20</td>
+        <td>100</td>
+        <td>€3,420.00</td>
+      </tr>
+      <tr>
+        <td>Website development</td>
+        <td>€45.50</td>
+        <td>100</td>
+        <td>€4,550.00</td>
+      </tr>
+      <tr>
+        <td>Website integration</td>
+        <td>€25.75</td>
+        <td>100</td>
+        <td>€2,575.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+
+
+      <th>Total due</th>
+    </thead>
+    <tbody>
+      <tr>
+
+
+        <td>€10,545.00</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>
